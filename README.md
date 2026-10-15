@@ -17,6 +17,17 @@ Customers message your business on WhatsApp and receive intelligent, natural res
 
 ---
 
+## 🎥 Live Demo Video
+
+Watch the complete end-to-end food ordering conversation live on WhatsApp:
+
+<div align="center">
+  <video src="docs/demo.mp4" width="620" controls></video>
+  <p><a href="docs/demo.mp4">▶️ <b>Watch / Download Live Demo Video (demo.mp4)</b></a></p>
+</div>
+
+---
+
 ## 📱 Live WhatsApp Demo & Conversation Flow
 
 A complete real-world ordering conversation handled entirely by the AI agent:
