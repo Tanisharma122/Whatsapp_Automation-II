@@ -19,14 +19,32 @@ Customers message your business on WhatsApp and receive intelligent, natural res
 
 ## 📱 Live WhatsApp Demo & Conversation Flow
 
-| 1. Welcome & Live Menu | 2. Ordering & Item Selection | 3. Summary & Confirmation |
-| :---: | :---: | :---: |
-| <img src="docs/images/01_menu_greeting.png" width="300" alt="Welcome & Live Menu" /> | <img src="docs/images/02_order_selection.png" width="300" alt="Ordering & Item Selection" /> | <img src="docs/images/03_order_confirmed.png" width="300" alt="Summary & Instant Confirmation" /> |
+A complete real-world ordering conversation handled entirely by the AI agent:
 
-### 💬 End-to-End Walkthrough
-1. **Greeting & Menu**: Customer texts `"hello"` and `"yes share with me your menu"` — the bot immediately formats and displays the live catalog (Pizzas, Burgers, Wraps, Pasta, Beverages, Desserts) with exact pricing.
-2. **Context-Aware Ordering**: Customer types `"one cold coffee and one pizza"` — the AI asks which pizza they'd like, then updates the order with `"3 margherita pizza"`. The AI calculates the correct quantities and prompts for delivery address.
-3. **Summary & Instant Confirmation**: Customer provides address & Cash on Delivery — the bot displays an itemized total (₹866). Once the customer replies `"Yes yes confirm"`, an official **Order ID** (`ORD-20261015005508-2573`) is issued, saved to the database, and confirmed!
+### 1. Welcome & Live Menu
+> The customer says hello and asks for the menu. The agent instantly responds with categorized dishes and live pricing.
+
+<div align="center">
+  <img src="docs/images/01_menu_greeting.png" width="580" alt="Welcome & Live Menu" style="border-radius: 8px; border: 1px solid #e1e4e8;" />
+</div>
+
+<br />
+
+### 2. Context-Aware Ordering & Customization
+> The customer asks for "one cold coffee and one pizza". The agent intelligently detects the ambiguity, recommends options, accepts modifications, and requests the delivery address.
+
+<div align="center">
+  <img src="docs/images/02_order_selection.png" width="580" alt="Ordering & Item Selection" style="border-radius: 8px; border: 1px solid #e1e4e8;" />
+</div>
+
+<br />
+
+### 3. Order Summary, Confirmation & Receipt
+> The customer provides their address and Cash on Delivery. The agent calculates the exact total (₹866), presents an itemized bill, generates a unique **Order ID** (`ORD-20261015005508-2573`), logs it to the database, and confirms the order.
+
+<div align="center">
+  <img src="docs/images/03_order_confirmed.png" width="580" alt="Summary & Instant Confirmation" style="border-radius: 8px; border: 1px solid #e1e4e8;" />
+</div>
 
 ---
 
