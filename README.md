@@ -9,11 +9,24 @@ Built with Python, FastAPI, Google Gemini, and Google Sheets.
 
 Customers message your business on WhatsApp and receive intelligent, natural responses:
 
-- 🍽️ **Menu browsing** — reads live inventory from Google Sheets
+- 🍽️ **Menu browsing** — reads live inventory from Google Sheets (with local Excel fallback)
 - ❓ **FAQ answers** — reads from your FAQ sheet
 - 🛒 **Order taking** — collects items, quantity, address, and payment method
 - ✅ **Order confirmation** — writes confirmed orders to Google Sheets *only after validation*
 - 🚫 **Safety** — never invents prices, never confirms orders the AI didn't actually save
+
+---
+
+## 📱 Live WhatsApp Demo & Conversation Flow
+
+| 1. Welcome & Live Menu | 2. Ordering & Item Selection | 3. Summary & Confirmation |
+| :---: | :---: | :---: |
+| <img src="docs/images/01_menu_greeting.png" width="300" alt="Welcome & Live Menu" /> | <img src="docs/images/02_order_selection.png" width="300" alt="Ordering & Item Selection" /> | <img src="docs/images/03_order_confirmed.png" width="300" alt="Summary & Instant Confirmation" /> |
+
+### 💬 End-to-End Walkthrough
+1. **Greeting & Menu**: Customer texts `"hello"` and `"yes share with me your menu"` — the bot immediately formats and displays the live catalog (Pizzas, Burgers, Wraps, Pasta, Beverages, Desserts) with exact pricing.
+2. **Context-Aware Ordering**: Customer types `"one cold coffee and one pizza"` — the AI asks which pizza they'd like, then updates the order with `"3 margherita pizza"`. The AI calculates the correct quantities and prompts for delivery address.
+3. **Summary & Instant Confirmation**: Customer provides address & Cash on Delivery — the bot displays an itemized total (₹866). Once the customer replies `"Yes yes confirm"`, an official **Order ID** (`ORD-20261015005508-2573`) is issued, saved to the database, and confirmed!
 
 ---
 
