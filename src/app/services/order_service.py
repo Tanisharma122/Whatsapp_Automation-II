@@ -81,9 +81,15 @@ class OrderService:
 
     def _order_id_exists(self, order_id: str) -> bool:
         """
-        Check if an order with this ID already exists in the sheet.
+        Check if an order with this ID already exists.
+        Works with both Google Sheets and local file fallback.
         Returns True if found (duplicate), False if safe to write.
         """
+        from app.integrations.excel_data_provider import is_sheets_configured, local_order_store
+
+        if not is_sheets_configured():
+            return local_order_store.find_order_by_id(order_id) is not None
+
         try:
             existing = self._sheets.find_row_by_value(
                 spreadsheet_id=self._get_spreadsheet_id(),
@@ -193,21 +199,34 @@ class OrderService:
             order_date=now_str,
         )
 
-        # Step 5: Write to Google Sheets
-        try:
-            self._sheets.append_row(
-                spreadsheet_id=self._get_spreadsheet_id(),
-                worksheet_name=self._get_worksheet_name(),
-                row=order.to_sheet_row(),
-            )
-        except SheetsClientError as exc:
-            logger.error("Failed to write order %s to sheet: %s", order_id, exc)
-            raise OrderServiceError(
-                f"Could not save your order to our system. Please try again. (Reference: {order_id})"
-            ) from exc
+        # Step 5: Write to Google Sheets (or local fallback)
+        from app.integrations.excel_data_provider import is_sheets_configured, local_order_store
+
+        if not is_sheets_configured():
+            # Local file fallback
+            try:
+                local_order_store.append_order(order.to_sheet_row())
+                logger.info("Order %s saved to local file (Sheets not configured).", order_id)
+            except Exception as exc:
+                logger.error("Failed to write order %s to local file: %s", order_id, exc)
+                raise OrderServiceError(
+                    f"Could not save your order. Please try again. (Reference: {order_id})"
+                ) from exc
+        else:
+            try:
+                self._sheets.append_row(
+                    spreadsheet_id=self._get_spreadsheet_id(),
+                    worksheet_name=self._get_worksheet_name(),
+                    row=order.to_sheet_row(),
+                )
+            except SheetsClientError as exc:
+                logger.error("Failed to write order %s to sheet: %s", order_id, exc)
+                raise OrderServiceError(
+                    f"Could not save your order to our system. Please try again. (Reference: {order_id})"
+                ) from exc
 
         logger.info(
-            "Order %s created successfully. Total: ₹%.2f, Items: %s",
+            "Order %s created successfully. Total: Rs. %.2f, Items: %s",
             order_id, total, item_names
         )
         return order

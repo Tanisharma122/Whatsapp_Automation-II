@@ -21,7 +21,7 @@ class WhatsAppProfile(BaseModel):
 
 
 class WhatsAppContact(BaseModel):
-    profile: WhatsAppProfile
+    profile: Optional[WhatsAppProfile] = None
     wa_id: str  # customer's WhatsApp phone number (without +)
 
 

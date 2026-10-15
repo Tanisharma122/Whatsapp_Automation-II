@@ -69,7 +69,13 @@ def verify_webhook(
 
     if hub_mode == "subscribe" and hub_verify_token == verify_token:
         logger.info("Webhook verification successful.")
-        return Response(content=hub_challenge, media_type="text/plain")
+        # ngrok-skip-browser-warning header bypasses ngrok's free-tier interstitial page
+        # so Meta's verification request reaches our server directly.
+        return Response(
+            content=hub_challenge,
+            media_type="text/plain",
+            headers={"ngrok-skip-browser-warning": "1"},
+        )
 
     logger.warning(
         "Webhook verification FAILED. "
@@ -114,7 +120,7 @@ async def receive_webhook(
     try:
         payload = WhatsAppWebhookPayload.model_validate(body)
     except ValidationError as exc:
-        logger.warning("Webhook payload validation failed: %s", exc.error_count())
+        logger.warning("Webhook payload validation failed: %s — errors: %s — raw body: %s", exc.error_count(), exc.errors(), body)
         # Still 200 — malformed payloads won't improve with retries
         return {"status": "received"}
 
@@ -135,7 +141,7 @@ async def receive_webhook(
 
             # Build a quick lookup for customer names
             name_lookup: dict[str, str] = {
-                c.wa_id: c.profile.name for c in contacts
+                c.wa_id: c.profile.name for c in contacts if c.profile
             }
 
             for message in messages:

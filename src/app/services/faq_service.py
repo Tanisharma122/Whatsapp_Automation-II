@@ -196,18 +196,32 @@ class FAQService:
 
     def get_all_faqs(self) -> list[FAQ]:
         """
-        Fetch all active FAQs from the sheet.
+        Fetch all active FAQs.
 
-        Automatically detects and handles both single-column and
-        multi-column sheet formats.
+        Tries Google Sheets first. If not configured, falls back to the
+        local Excel file (data/Food_Delivery_System.xlsx).
 
         Returns:
             List of active FAQ objects.
-
-        Raises:
-            SheetsClientError on sheet access failure.
         """
-        # First, try multi-column format (proper Google Sheets)
+        from app.integrations.excel_data_provider import is_sheets_configured, excel_provider
+
+        if not is_sheets_configured():
+            logger.info("Google Sheets not configured — using local Excel for FAQs.")
+            raw_values = excel_provider.read_faqs_raw_column()
+            faqs = []
+            for i, raw in enumerate(raw_values):
+                if i == 0:  # skip header row
+                    continue
+                if not raw or not raw.strip():
+                    continue
+                faq = FAQ.from_single_column_row(raw)
+                if faq and faq.active:
+                    faqs.append(faq)
+            logger.info("Loaded %d FAQs from local Excel.", len(faqs))
+            return faqs
+
+        # Google Sheets path — try multi-column format first
         try:
             raw_rows = self._sheets.read_all_records(
                 spreadsheet_id=self._get_spreadsheet_id(),

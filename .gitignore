@@ -20,9 +20,10 @@ service_account.json
 *.pem
 *.key
 
-# Logs
+# Logs and local test databases
 logs/
 *.log
+data/local_orders.json
 
 # Pytest / coverage
 .pytest_cache/
@@ -46,3 +47,10 @@ Thumbs.db
 dist/
 build/
 *.egg-info/
+
+# ngrok binary (downloaded locally, not committed)
+scripts/ngrok.exe
+scripts/ngrok.zip
+
+# Cloudflare tunnel binary (downloaded locally, not committed)
+scripts/cloudflared.exe

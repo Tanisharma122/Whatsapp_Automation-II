@@ -98,20 +98,31 @@ class InventoryService:
 
     def get_all_items(self) -> list[InventoryItem]:
         """
-        Fetch and return all inventory items from the sheet.
+        Fetch and return all inventory items.
+
+        Tries Google Sheets first. If not configured, falls back to the
+        local Excel file (data/Food_Delivery_System.xlsx).
 
         Returns:
-            List of InventoryItem objects. Empty list if the sheet is empty.
-
-        Raises:
-            SheetsClientError on any sheet access failure.
+            List of InventoryItem objects. Empty list if no data source available.
         """
+        # Try local Excel fallback first if Sheets is not configured
+        from app.integrations.excel_data_provider import is_sheets_configured, excel_provider
+
+        if not is_sheets_configured():
+            logger.info("Google Sheets not configured — using local Excel fallback.")
+            raw_rows = excel_provider.read_inventory()
+            items = [InventoryItem.from_sheet_row(row) for row in raw_rows]
+            logger.info("Loaded %d inventory items from Excel.", len(items))
+            return items
+
+        # Google Sheets path
         raw_rows = self._sheets.read_all_records(
             spreadsheet_id=self._get_spreadsheet_id(),
             worksheet_name=self._get_worksheet_name(),
         )
         items = [InventoryItem.from_sheet_row(row) for row in raw_rows]
-        logger.info("Loaded %d inventory items.", len(items))
+        logger.info("Loaded %d inventory items from Google Sheets.", len(items))
         return items
 
     def get_available_items(self) -> list[InventoryItem]:
